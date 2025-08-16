@@ -47,14 +47,6 @@ spec:
             secretKeyRef:
               name: payments-manager-service-certs
               key: ca.crt
-        volumeMounts:
-        - name: app-code
-          mountPath: /app
-      volumes:
-      - name: app-code
-        hostPath:
-          path: ${HOSTPATH}
-          type: DirectoryOrCreate
 ---
 apiVersion: v1
 kind: Service
