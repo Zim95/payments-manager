@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payments-manager-development
+  namespace: ${NAMESPACE}
+  labels:
+    app: payments-manager-development
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payments-manager-development
+  template:
+    metadata:
+      labels:
+        app: payments-manager-development
+    spec:
+      containers:
+      - name: payments-manager-development
+        image: ${REPO_NAME}/payments-manager-development:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+        env:
+        - name: PAYMENTS_MANAGER_SERVER_KEY
+          valueFrom:
+            secretKeyRef:
+              name: payments-manager-development-service-certs
+              key: server.key
+        - name: PAYMENTS_MANAGER_SERVER_CRT
+          valueFrom:
+            secretKeyRef:
+              name: payments-manager-development-service-certs
+              key: server.crt
+        - name: PAYMENTS_MANAGER_CLIENT_KEY
+          valueFrom:
+            secretKeyRef:
+              name: payments-manager-development-service-certs
+              key: client.key
+        - name: PAYMENTS_MANAGER_CLIENT_CRT
+          valueFrom:
+            secretKeyRef:
+              name: payments-manager-development-service-certs
+              key: client.crt
+        - name: PAYMENTS_MANAGER_CA_CRT
+          valueFrom:
+            secretKeyRef:
+              name: payments-manager-development-service-certs
+              key: ca.crt
+        volumeMounts:
+        - name: app-code
+          mountPath: /app
+      volumes:
+      - name: app-code
+        hostPath:
+          path: ${HOSTPATH}
+          type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payments-manager-development-service
+  namespace: ${NAMESPACE} # Namespace placeholder
+spec:
+  selector:
+    app: payments-manager-development
+  ports:
+    - protocol: TCP
+      port: 8000     # The port exposed by the service
+      targetPort: 8000  # The container's port
+  type: ClusterIP  # Use LoadBalancer or NodePort if external access is needed
