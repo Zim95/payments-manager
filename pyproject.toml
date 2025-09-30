@@ -10,6 +10,7 @@ readme = "README.md"
 python = "^3.12"
 fastapi = "^0.116.1"
 uvicorn = "0.33.0"
+browseterm-db = {git = "https://github.com/Zim95/browseterm-db.git", rev = "main"}
 
 
 [build-system]
