@@ -1,8 +1,17 @@
+# third-party
 from fastapi import FastAPI
 import uvicorn
 
+# modules
+'''
+Our DB and Migrations have already been set up by browseterm_db initializer.
+Hence, we can directly connect to the DB using DBConfig.
 
-app = FastAPI()
+All migrations related operations are handled by our browseterm_db library.
+'''
+
+# fastapi app
+app: FastAPI = FastAPI()
 
 
 def hello_world() -> dict:
